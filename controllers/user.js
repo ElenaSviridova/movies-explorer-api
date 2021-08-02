@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
+const NotFoundError = require('../errors/not-found-error');
+const BadRequestError = require('../errors/bad-request-error');
+const ConflictError = require('../errors/conflict-error');
 
 const { JWT_SECRET = 'secret-key' } = process.env;
 
@@ -18,7 +20,7 @@ module.exports = {
   },
   getUserInfo(req, res, next) {
     User.findById(req.user._id)
-      .orFail(new Error('Пользователь с указанным _id не найден.'))
+      .orFail(new NotFoundError('Пользователь с указанным _id не найден.'))
       .then((user) => {
         res.send({
           name: user.name,
@@ -51,9 +53,9 @@ module.exports = {
       }))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          throw new Error('Переданы некорректные данные при создании пользователя');
+          throw new BadRequestError('Переданы некорректные данные при создании пользователя');
         } else if (err.name === 'MongoError') {
-          throw new Error('Ошибка базы данных');
+          throw new ConflictError('Ошибка базы данных');
         } else {
           next(err);
         }

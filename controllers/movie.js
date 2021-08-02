@@ -1,7 +1,9 @@
 // const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
 const Movie = require('../models/movie');
-
+const NotFoundError = require('../errors/not-found-error');
+const BadRequestError = require('../errors/bad-request-error');
+const NoAccessError = require('../errors/forbidden-error');
 
 module.exports = {
   getMovies(req, res, next) {
@@ -19,6 +21,9 @@ module.exports = {
     Movie.findById(req.params.movieId)
       .orFail(new Error('NotValidId'))
       .then((movie) => {
+        if (movie.owner.toString() !== req.user._id) {
+          return Promise.reject(new NoAccessError('Невозможно удалить чужую карточку'));
+        }
         Movie.deleteOne({ _id: movie._id })
           .then(() => {
             res.status(200).send(movie);
@@ -27,9 +32,9 @@ module.exports = {
       })
       .catch((err) => {
         if (err.message === 'NotValidId') {
-          throw new Error('Карточка с указанным _id не найдена.');
+          throw new NotFoundError('Фильм с указанным _id не найден.');
         } else if (err.name === 'CastError') {
-          throw new Error('Переданы некорректные данные.');
+          throw new BadRequestError('Переданы некорректные данные.');
         } else {
           next(err);
         }

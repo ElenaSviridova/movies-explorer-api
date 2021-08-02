@@ -10,11 +10,12 @@ const { celebrate, Joi } = require('celebrate');
 const userRoutes = require('./routes/user');
 const movieRoutes = require('./routes/movie');
 const auth = require('./middlewares/auth');
-// const NotFoundError = require('./errors/not-found-error');
+const NotFoundError = require('./errors/not-found-error');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
+// console.log(process.env.NODE_ENV);
 
 const app = express();
 
@@ -72,7 +73,7 @@ app.use('/movies', movieRoutes);
 
 app.use((req, res, next) => {
   try {
-    throw new Error('Запрашиваемый ресурс не найден');
+    throw new NotFoundError('Запрашиваемый ресурс не найден');
   } catch (err) {
     next(err);
   }

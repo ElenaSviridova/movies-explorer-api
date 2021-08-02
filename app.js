@@ -15,7 +15,7 @@ const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
-console.log(process.env.NODE_ENV);
+console.log(process.env.JWT_SECRET);
 
 const app = express();
 

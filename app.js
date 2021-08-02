@@ -13,8 +13,9 @@ const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-error');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 console.log(process.env.JWT_SECRET);
 
 const app = express();
@@ -25,7 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 async function start() {
-  await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+  await mongoose.connect(DB_ADRESS, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -83,7 +84,7 @@ app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 
-// app.use(centralisedErrorsHandler);
+app.use(centralisedErrorsHandler);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

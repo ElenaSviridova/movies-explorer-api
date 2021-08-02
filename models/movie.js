@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -25,32 +26,36 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(v),
+      validator: (v) => validator.isURL(v),
     },
   },
   trailer: {
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(v),
+      validator: (v) => validator.isURL(v),
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(v),
+      validator: (v) => validator.isURL(v),
     },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    //ref: 'user',
+    ref: 'user',
     required: true,
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId,
-    //ref: 'user',
+    type: Number,
+    ref: 'movie',
     required: true,
+    unique: true,
+    validate: {
+      validator: (v) => validator.isInt(v)
+    }
   },
   nameRu: {
     type: String,
@@ -62,4 +67,4 @@ const movieSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('card', movieSchema);
+module.exports = mongoose.model('movie', movieSchema);

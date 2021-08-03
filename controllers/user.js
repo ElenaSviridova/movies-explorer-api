@@ -7,7 +7,6 @@ const ConflictError = require('../errors/conflict-error');
 
 const { JWT_SECRET = 'secret-key' } = process.env;
 
-
 module.exports = {
   login(req, res, next) {
     const { email, password } = req.body;
@@ -48,7 +47,7 @@ module.exports = {
       }))
       .then(() => res.status(200).send({
         data: {
-          name, email
+          name, email,
         },
       }))
       .catch((err) => {
@@ -61,5 +60,5 @@ module.exports = {
         }
       })
       .catch(next);
-  }
+  },
 };

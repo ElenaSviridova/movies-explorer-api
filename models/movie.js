@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-var validator = require('validator');
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -50,18 +50,14 @@ const movieSchema = new mongoose.Schema({
   },
   movieId: {
     type: Number,
-    ref: 'movie',
     required: true,
     unique: true,
-    validate: {
-      validator: (v) => validator.isInt(v)
-    }
   },
-  nameRu: {
+  nameRU: {
     type: String,
     required: true,
   },
-  nameEn: {
+  nameEN: {
     type: String,
     required: true,
   },

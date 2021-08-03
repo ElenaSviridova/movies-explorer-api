@@ -16,6 +16,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
 
 const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
+
+// eslint-disable-next-line no-console
 console.log(process.env.JWT_SECRET);
 
 const app = express();

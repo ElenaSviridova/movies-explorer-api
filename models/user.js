@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-var validator = require('validator');
+const validator = require('validator');
 const NoAuthorizationError = require('../errors/no-authorization');
 
 const userSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
     validate: {
       validator: (v) => validator.isEmail(v),
       message: 'Неправильный формат почты',
@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {

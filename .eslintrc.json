@@ -1,23 +1,16 @@
 {
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2021": true,
-        "node": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 12
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
+  "extends":
+      "airbnb-base"
+,
+  "rules": {
+      "no-underscore-dangle": 0,
+      "linebreak-style": [0, "error", "windows"]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "/"]
+      }
     }
+  }
 }

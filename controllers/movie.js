@@ -33,7 +33,7 @@ module.exports = {
   },
   removeMovie(req, res, next) {
     Movie.findById(req.params.movieId)
-      .orFail(new Error('NotValidId'))
+      .orFail(new NotFoundError('NotValidId'))
       // eslint-disable-next-line consistent-return
       .then((movie) => {
         if (movie.owner.toString() !== req.user._id) {
@@ -46,9 +46,7 @@ module.exports = {
           .catch(next);
       })
       .catch((err) => {
-        if (err.message === 'NotValidId') {
-          throw new NotFoundError('Фильм с указанным _id не найден.');
-        } else if (err.name === 'CastError') {
+        if (err.name === 'CastError') {
           throw new BadRequestError('Переданы некорректные данные.');
         } else {
           next(err);

@@ -1,5 +1,4 @@
 const express = require('express');
-const limitter = require('express-rate-limit');
 
 require('dotenv').config();
 const bodyParser = require('body-parser');
@@ -7,8 +6,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
-// const userRoutes = require('./routes/user');
-// const movieRoutes = require('./routes/movie');
+const limiter = require('./limiter');
 const allRoutes = require('./routes/index');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-error');
@@ -16,8 +14,6 @@ const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
 const { DB_ADRESS, PORT } = require('./config');
-
-// const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
@@ -38,20 +34,7 @@ async function start() {
 start();
 
 app.use(requestLogger);
-app.use(limitter({
-  windowsMs: 5000,
-  max: 50,
-  message: {
-    code: 429,
-    message: 'Слишком много запросов, подождите',
-  },
-}));
-
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+app.use(limiter);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -69,18 +52,10 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-// app.use('/users', userRoutes);
-
-// app.use('/movies', movieRoutes);
-
 app.use('/', allRoutes);
 
 app.use((req, res, next) => {
-  try {
-    throw new NotFoundError('Запрашиваемый ресурс не найден');
-  } catch (err) {
-    next(err);
-  }
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
 app.use(errorLogger); // подключаем логгер ошибок

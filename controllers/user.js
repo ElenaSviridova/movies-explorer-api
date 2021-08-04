@@ -55,7 +55,7 @@ module.exports = {
         if (err.name === 'ValidationError') {
           throw new BadRequestError('Переданы некорректные данные при создании пользователя');
         } else if (err.name === 'MongoError') {
-          throw new ConflictError('Ошибка базы данных');
+          throw new ConflictError('Данный почтовый ящик уже использован');
         } else {
           next(err);
         }

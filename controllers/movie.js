@@ -2,6 +2,7 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const NoAccessError = require('../errors/forbidden-error');
+const { OK } = require('../constants');
 
 module.exports = {
   getMovies(req, res, next) {
@@ -40,7 +41,7 @@ module.exports = {
         }
         Movie.deleteOne({ _id: movie._id })
           .then(() => {
-            res.status(200).send(movie);
+            res.status(OK).send(movie);
           })
           .catch(next);
       })

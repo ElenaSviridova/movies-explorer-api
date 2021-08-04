@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ConflictError = require('../errors/conflict-error');
+const { OK } = require('../constants');
 
 const { JWT_SECRET = 'secret-key' } = process.env;
 
@@ -33,7 +34,7 @@ module.exports = {
     const { name, email } = req.body;
     User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
       .then((user) => {
-        res.status(200).send(user);
+        res.status(OK).send(user);
       })
       .catch(next);
   },
@@ -45,7 +46,7 @@ module.exports = {
       .then((hash) => User.create({
         name, email, password: hash,
       }))
-      .then(() => res.status(200).send({
+      .then(() => res.status(OK).send({
         data: {
           name, email,
         },

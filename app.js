@@ -7,18 +7,17 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
-const userRoutes = require('./routes/user');
-const movieRoutes = require('./routes/movie');
+// const userRoutes = require('./routes/user');
+// const movieRoutes = require('./routes/movie');
+const allRoutes = require('./routes/index');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-error');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
+const { DB_ADRESS, PORT } = require('./config');
 
-const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
-
-// eslint-disable-next-line no-console
-console.log(process.env.JWT_SECRET);
+// const { PORT = 3000, DB_ADRESS = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
@@ -70,9 +69,11 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use('/users', userRoutes);
+// app.use('/users', userRoutes);
 
-app.use('/movies', movieRoutes);
+// app.use('/movies', movieRoutes);
+
+app.use('/', allRoutes);
 
 app.use((req, res, next) => {
   try {

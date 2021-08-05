@@ -38,7 +38,7 @@ module.exports = {
       })
       .catch((err) => {
         // console.log(err);
-        if (err.name === 'DuplicateKey') {
+        if (err.codeName === 'DuplicateKey') {
           throw new ConflictError('Данный почтовый ящик уже использован');
         } else {
           next(err);

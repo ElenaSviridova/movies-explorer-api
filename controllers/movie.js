@@ -2,7 +2,7 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const NoAccessError = require('../errors/forbidden-error');
-const { OK } = require('../constants');
+const { OK, DATA_INCORRECT, CANT_DELETE_ANOTHERS_CARD } = require('../constants');
 
 module.exports = {
   getMovies(req, res, next) {
@@ -11,11 +11,13 @@ module.exports = {
       .catch(next);
   },
   createMovie(req, res, next) {
+    const owner = req.user._id;
     const {
       country, director, duration, year, description,
       image, trailer, nameRU, nameEN, thumbnail, movieId,
     } = req.body;
     Movie.create({
+      owner,
       country,
       director,
       duration,
@@ -37,7 +39,7 @@ module.exports = {
       // eslint-disable-next-line consistent-return
       .then((movie) => {
         if (movie.owner.toString() !== req.user._id) {
-          return Promise.reject(new NoAccessError('Невозможно удалить чужую карточку'));
+          return Promise.reject(new NoAccessError(CANT_DELETE_ANOTHERS_CARD));
         }
         Movie.deleteOne({ _id: movie._id })
           .then(() => {
@@ -47,7 +49,7 @@ module.exports = {
       })
       .catch((err) => {
         if (err.name === 'CastError') {
-          throw new BadRequestError('Переданы некорректные данные.');
+          throw new BadRequestError(DATA_INCORRECT);
         } else {
           next(err);
         }

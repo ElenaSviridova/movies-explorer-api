@@ -6,4 +6,13 @@ module.exports = {
   FORBIDDEN_ERROR: '403',
   NO_AUTHORIZATION_ERROR: '401',
   OK: '200',
+  RESOURCE_NOT_FOUND: 'Запрашиваемый ресурс не найден',
+  NO_USER_WITH_THIS_ID: 'Пользователь с указанным _id не найден.',
+  EMAIL_USED: 'Данный почтовый ящик уже использован',
+  DATA_INCORRECT_DURING_USER_CREATION: 'Переданы некорректные данные при создании пользователя',
+  DATA_INCORRECT: 'Переданы некорректные данные.',
+  CANT_DELETE_ANOTHERS_CARD: 'Невозможно удалить чужую карточку',
+  MUST_AUTHORIZED: 'Необходима авторизация',
+  SERVER_ERROR: 'На сервере произошла ошибка',
+  WRONG_EMAIL_OR_PASSWORD: 'Неправильная почта или пароль',
 };

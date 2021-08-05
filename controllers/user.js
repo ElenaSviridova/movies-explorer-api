@@ -4,7 +4,10 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ConflictError = require('../errors/conflict-error');
-const { OK } = require('../constants');
+const {
+  OK, NO_USER_WITH_THIS_ID,
+  EMAIL_USED, DATA_INCORRECT_DURING_USER_CREATION,
+} = require('../constants');
 
 const { JWT_SECRET = 'secret-key' } = process.env;
 
@@ -20,7 +23,7 @@ module.exports = {
   },
   getUserInfo(req, res, next) {
     User.findById(req.user._id)
-      .orFail(new NotFoundError('Пользователь с указанным _id не найден.'))
+      .orFail(new NotFoundError(NO_USER_WITH_THIS_ID))
       .then((user) => {
         res.send({
           name: user.name,
@@ -38,7 +41,7 @@ module.exports = {
       })
       .catch((err) => {
         if (err.codeName === 'DuplicateKey') {
-          throw new ConflictError('Данный почтовый ящик уже использован');
+          throw new ConflictError(EMAIL_USED);
         } else {
           next(err);
         }
@@ -60,9 +63,9 @@ module.exports = {
       }))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          throw new BadRequestError('Переданы некорректные данные при создании пользователя');
+          throw new BadRequestError(DATA_INCORRECT_DURING_USER_CREATION);
         } else if (err.name === 'MongoError') {
-          throw new ConflictError('Данный почтовый ящик уже использован');
+          throw new ConflictError(EMAIL_USED);
         } else {
           next(err);
         }

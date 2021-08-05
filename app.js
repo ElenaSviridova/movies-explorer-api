@@ -7,9 +7,8 @@ const helmet = require('helmet');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
 const limiter = require('./limiter');
-const allRoutes = require('./routes/index');
+const protectedRoutes = require('./routes/index');
 const auth = require('./middlewares/auth');
-const NotFoundError = require('./errors/not-found-error');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
@@ -52,11 +51,7 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use('/', allRoutes);
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
-});
+app.use('/', protectedRoutes);
 
 app.use(errorLogger); // подключаем логгер ошибок
 

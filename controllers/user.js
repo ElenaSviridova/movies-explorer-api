@@ -37,8 +37,14 @@ module.exports = {
         res.status(OK).send(user);
       })
       .catch((err) => {
-        console.log(err);
-      });
+        // console.log(err);
+        if (err.name === 'DuplicateKey') {
+          throw new ConflictError('Данный почтовый ящик уже использован');
+        } else {
+          next(err);
+        }
+      })
+      .catch(next);
   },
   createUser(req, res, next) {
     const {

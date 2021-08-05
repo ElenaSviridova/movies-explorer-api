@@ -36,7 +36,9 @@ module.exports = {
       .then((user) => {
         res.status(OK).send(user);
       })
-      .catch(next);
+      .catch((err) => {
+        console.log(err);
+      });
   },
   createUser(req, res, next) {
     const {

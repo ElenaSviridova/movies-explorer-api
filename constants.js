@@ -15,4 +15,7 @@ module.exports = {
   MUST_AUTHORIZED: 'Необходима авторизация',
   SERVER_ERROR: 'На сервере произошла ошибка',
   WRONG_EMAIL_OR_PASSWORD: 'Неправильная почта или пароль',
+  IMAGE_IS_INCORRECT: 'Поле image заполнено некорректно',
+  TRAILER_IS_INCORRECT: 'Поле trailer заполнено некорректно',
+  THUMBNAIL_IS_INCORRECT: 'Поле thumbnail заполнено некорректно',
 };

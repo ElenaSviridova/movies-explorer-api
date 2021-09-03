@@ -1,7 +1,8 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'http://localhost:3001',
+  'http://localhost:3000',
   'https://es.sviridova.nomoredomains.monster',
+  'http://es.sviridova.nomoredomains.monster',
 ];
 
 module.exports = (req, res, next) => {

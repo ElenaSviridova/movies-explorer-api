@@ -6,8 +6,8 @@ const { OK, DATA_INCORRECT, CANT_DELETE_ANOTHERS_CARD } = require('../constants'
 
 module.exports = {
   getMovies(req, res, next) {
-    Movie.find({})
-      .then((movies) => res.send({ data: movies }))
+    Movie.find({ owner: req.user._id })
+      .then((movies) => res.send(movies))
       .catch(next);
   },
   createMovie(req, res, next) {
@@ -34,7 +34,7 @@ module.exports = {
       .catch(next);
   },
   removeMovie(req, res, next) {
-    Movie.findById(req.params.movieId)
+    Movie.findById(req.params.id)
       .orFail(new NotFoundError('NotValidId'))
       // eslint-disable-next-line consistent-return
       .then((movie) => {

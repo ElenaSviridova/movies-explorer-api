@@ -12,6 +12,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/user');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const centralisedErrorsHandler = require('./middlewares/centralisederrorshandler');
+const cors = require('./middlewares/cors');
 const { DB_ADRESS, PORT } = require('./config');
 
 const app = express();
@@ -34,6 +35,8 @@ start();
 
 app.use(requestLogger);
 app.use(limiter);
+
+app.use(cors);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
